@@ -1,0 +1,70 @@
+const N = 2; // number of lifts in the building    
+const M = 10; // number of floors in the building   
+
+// Lift class represents a lift in the building 
+class Lift {
+  constructor(id) {
+    this.id = id;
+    this.currentFloor = 0; // all lifts start at the ground floor
+    this.state = 'closed'; // lift is closed at the start
+  }
+
+  // function to move the lift to a destination floor    
+  move(destinationFloor) {
+    if (destinationFloor < 0 || destinationFloor > M) {
+      console.log(`Invalid floor number: ${destinationFloor}`);
+      return;
+    }
+
+    console.log(`Lift ${this.id} ---> ${this.currentFloor} Floor ---> ${destinationFloor} floor`);
+    this.currentFloor = destinationFloor;
+  }
+
+  // function to open the lift doors
+  open() {
+    this.state = 'open';
+    console.log(`Lift ${this.id} ( doors opened)`);
+  }
+
+  // function to close the lift doors
+  close() {
+    this.state = 'closed';
+    console.log(`Lift ${this.id} (doors closed)`);
+  }
+}
+
+// array to store the lifts in the building
+const lifts = [];
+
+// initialize the lifts
+for (let i = 0; i < N; i++) {
+  lifts.push(new Lift(i + 1));
+}
+
+// function to handle a request for a lift
+function handleRequest(startingFloor, destinationFloor) {
+  // find the lift that can serve the request in the least time
+  let selectedLift = null;
+  let minTime = Infinity;
+  for (const lift of lifts) {
+    const time = Math.abs(startingFloor - lift.currentFloor) + Math.abs(destinationFloor - startingFloor) + 2; // 2 units of time for opening and closing the doors
+    if (time < minTime) {
+      minTime = time;
+      selectedLift = lift;
+    }
+  }
+
+  // move the selected lift to the starting floor
+  selectedLift.move(startingFloor);
+  // open the lift doors
+  selectedLift.open();
+  // move the lift to the destination floor
+  selectedLift.move(destinationFloor);
+  // close the lift doors
+  selectedLift.close(); 
+
+  console.log(`Request completed in ${minTime} units of time`);
+}
+
+// example requests
+handleRequest(2, 13);  
